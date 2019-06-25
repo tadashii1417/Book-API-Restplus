@@ -17,9 +17,36 @@ bookModel = book.model('Book', {
 })
 
 
+# create read update delete searchbook(isbn) or likely by title
+
 @book.route('/get')
-class BookApi(Resource):
+class BookApiList(Resource):
     '''Book api to get all books.'''
 
     def get(self):
+        return {"hi": "truong"}
+
+    '''Book api create new book.'''
+
+    def post(self):
+        return {"hi": "truong"}
+
+
+@book.route('/<int:id>')
+@book.response(404, "ID not found")
+@book.param('id', 'The book identifier')
+class BookApi(Resource):
+    '''Book api to get a specific book by its id.'''
+
+    def get(self, id):
+        return {"hi": "truong"}
+
+    '''Book api to delete a books.'''
+
+    def delete(self, id):
+        return {"hi": "truong"}
+
+    '''Book api to update given book identifier'''
+
+    def put(self, id):
         return {"hi": "truong"}
