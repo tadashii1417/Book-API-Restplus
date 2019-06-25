@@ -3,17 +3,15 @@ from flask_restplus import Namespace, Resource, fields
 author = Namespace('authors', description="Authors related operations.")
 
 authorModel = author.model('Author', {
-    'ID': fields.Integer(description="Book identifier"),
-    'title': fields.String(description="Book title"),
-    'isbn': fields.String(description="Book ISBN"),
-    'year': fields.Integer(description="Year of the book"),
-    'authorId': fields.Integer(description="Identifier of the book author"),
+    'id': fields.Integer(description="Author identifier"),
+    'firstName': fields.String(description="Author first name"),
+    'lastName': fields.String(description="Author last name"),
+    'email': fields.String(description="Author email"),
+    'phone': fields.String(description="Author phone number"),
+    'address': fields.String(),
     'status': fields.String(),
     'created': fields.DateTime(),
     'updated': fields.DateTime(),
-    'view': fields.Integer(),
-    'vote': fields.Integer(),
-    'download': fields.Integer()
 })
 
 

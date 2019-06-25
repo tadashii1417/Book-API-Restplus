@@ -3,7 +3,7 @@ from flask_restplus import Namespace, Resource, fields
 book = Namespace('books', description="Books related operations.")
 
 bookModel = book.model('Book', {
-    'ID': fields.Integer(description="Book identifier"),
+    'id': fields.Integer(description="Book identifier"),
     'title': fields.String(description="Book title"),
     'isbn': fields.String(description="Book ISBN"),
     'year': fields.Integer(description="Year of the book"),
