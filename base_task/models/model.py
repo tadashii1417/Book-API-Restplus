@@ -1,6 +1,5 @@
 from base_task.models import db
 
-
 class Books(db.Model):
     __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
@@ -33,3 +32,5 @@ class Authors(db.Model):
 
     def __repr__(self) -> str:
         return "Author: " + self.firstName
+
+db.create_all()

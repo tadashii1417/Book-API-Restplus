@@ -5,12 +5,47 @@ import flask_bcrypt as _fb
 import flask_migrate as _fm
 import flask_sqlalchemy as _fs
 
-__author__ = 'Kien'
+__author__ = 'Truong'
 _logger = logging.getLogger('api')
 
 db = _fs.SQLAlchemy()
 migrate = _fm.Migrate(db=db)
 bcrypt = _fb.Bcrypt()
+
+
+class Books(db.Model):
+    __tablename__ = 'books'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    isbn = db.Column(db.String(50), nullable=False, unique=True)
+    year = db.Column(db.Integer, nullable=False)
+    authorId = db.Column(db.Integer, db.ForeignKey('authors.id'), nullable=False)
+    author = db.relationship('Authors', backref=db.backref('books'))
+    status = db.Column(db.String(50), nullable=False)
+    created = db.Column(db.DateTime, nullable=False)
+    updated = db.Column(db.DateTime, nullable=False)
+    view = db.Column(db.Integer, nullable=False)
+    vote = db.Column(db.Integer, nullable=False)
+    download = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self) -> str:
+        return "Book: " + self.title
+
+
+class Authors(db.Model):
+    __tablename__ = 'authors'
+    id = db.Column(db.Integer, primary_key=True)
+    firstName = db.Column(db.String(100), nullable=False)
+    lastName = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(100), nullable=False)
+    address = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    created = db.Column(db.DateTime, nullable=False)
+    updated = db.Column(db.DateTime, nullable=False)
+
+    def __repr__(self) -> str:
+        return "Author: " + self.firstName
 
 
 def init_app(app, **kwargs):
@@ -22,6 +57,7 @@ def init_app(app, **kwargs):
     """
     db.app = app
     db.init_app(app)
+    # db.create_all()
     migrate.init_app(app)
     _logger.info('Start app in {env} environment with database: {db}'.format(
         env=app.config['ENV_MODE'],
