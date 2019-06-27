@@ -15,7 +15,6 @@ class BasicTests(unittest.TestCase):
         self.app = app.test_client()
         # db.drop_all()
         # db.create_all()
-
         self.assertEqual(app.debug, False)
 
     # executed after each test
