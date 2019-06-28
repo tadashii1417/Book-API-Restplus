@@ -8,6 +8,10 @@ def valiateBookPayload(payload, book):
     if payload['year'] < 0 or payload['year'] > now.year:
         book.abort(400, "Invalid input")
 
+    isbnPattern = '[-0-9]{10,15}'
+    if not bool(re.match(isbnPattern, payload['isbn'])):
+        book.abort(400, "Invalid input")
+
 
 def valiateAuthorPayload(payload, author):
     emailPattern = "^[a-z][a-z0-9_\.]{5,32}@[a-z0-9]{2,}(\.[a-z0-9]{2,4}){1,2}$"

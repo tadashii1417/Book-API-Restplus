@@ -1,6 +1,7 @@
 from flask_restplus import Namespace, Resource, fields
 from ..models import *
 from .util import valiateAuthorPayload
+
 author = Namespace('authors', description="Authors related operations.")
 
 authorModel = author.model('Author', {
@@ -19,10 +20,27 @@ authorModel = author.model('Author', {
 @author.route('/')
 class AuthorApi(Resource):
 
-    @author.marshal_list_with(authorModel)
+    # @author.marshal_list_with(authorModel)
     def get(self):
         '''Author api to get all authors.'''
-        return Authors.query.all()
+        # return Authors.query.all()
+        res = []
+        for author in Authors.query.all():
+            bestBook = db.session.query(Books).filter(Books.authorId == author.id).order_by(Books.vote.desc()).first()
+            temp = {
+                "id": author.id,
+                "firstName": author.firstName,
+                "lastName": author.lastName,
+                "email": author.email,
+                "phone": author.phone,
+                "address": author.address,
+                "book-count": len(author.books),
+                "bestBook-isbn": bestBook.isbn if bestBook else "",
+                "bestBook-title": bestBook.title if bestBook else ""
+            }
+            res.append(temp)
+
+        return res
 
     @author.expect(authorModel)
     @author.response(400, "Input not valid")
@@ -42,5 +60,3 @@ class AuthorApi(Resource):
         db.session.add(newAuthor)
         db.session.commit()
         return author.payload
-
-

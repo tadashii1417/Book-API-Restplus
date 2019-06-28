@@ -44,6 +44,8 @@ class BookApiList(Resource):
             updated=book.payload['updated'],
         )
         db.session.add(newBook)
+        updateAuthor = Authors.query.filter_by(id=1).first()
+        updateAuthor.bookcount += 1
         db.session.commit()
         return book.payload, 201
 
@@ -67,7 +69,11 @@ class BookApi(Resource):
         delBook = db.session.query(Books).filter(Books.id == id).first()
         if not delBook:
             book.abort(404, "ID not found")
+
+        updateAuthor = Authors.query.filter_by(id=delBook.authorId).first()
+        updateAuthor.bookcount -= 1
         db.session.delete(delBook)
+        db.session.commit()
         return "Book deleted", 204
 
     @book.expect(bookModel)
@@ -91,7 +97,7 @@ class BookApi(Resource):
         return updateBook
 
 
-@book.route('/<isbn>')
+@book.route('/isbn/<isbn>')
 @book.response(404, "ISBN not found")
 @book.param('isbn', "International Standard Book Number.")
 class BookISBN(Resource):
@@ -102,3 +108,16 @@ class BookISBN(Resource):
         if not db.session.query(Books).filter(Books.isbn == isbn).first():
             book.abort(404, "ISBN not found")
         return db.session.query(Books).filter(Books.isbn == isbn).first()
+
+
+@book.route('/title/<search>')
+@book.param('search', "Title string to search")
+class BookISBN(Resource):
+
+    @book.marshal_list_with(bookModel)
+    def get(self, search):
+        '''Book api to seach list of books by its title.'''
+        res = []
+        for x in search.split():
+            res += db.session.query(Books).filter(Books.title.like("%" + x + "%")).all()
+        return res

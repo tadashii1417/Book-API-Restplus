@@ -45,6 +45,7 @@ class Authors(db.Model):
     status = db.Column(db.String(50), nullable=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    bookcount = db.Column(db.Integer, default=0)
 
     def __repr__(self) -> str:
         return "Author: " + self.firstName
